@@ -1224,7 +1224,7 @@ def set_property_change_callback(client, callback, arg=None):
 
     return -1
 
-def __load_libjack(libname):
+def load_libjack(libname):
     # -------------------------------------------------------------------------------------------------
     # Load JACK shared library
 
@@ -1876,16 +1876,6 @@ try:
     else:
         _libname = "libjack.so.0"
 
-    jlib = __load_libjack(_libname)
+    jlib = load_libjack(_libname)
 except OSError:
     raise ImportError("JACK is not available in this system")
-
-# -------------------------------------------------------------------------------------------------
-# Option for manual initialization
-
-def load_libjack(libname):
-    global jlib
-    try:
-        jlib = __load_libjack(libname)
-    except OSError:
-        raise ImportError("Jack not found under name " + libname)
