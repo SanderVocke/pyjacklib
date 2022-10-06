@@ -1230,7 +1230,6 @@ def load_libjack(libname):
 
     jlib = cdll.LoadLibrary(libname)
 
-
     # -------------------------------------------------------------------------------------------------
     # JACK2 test
 
