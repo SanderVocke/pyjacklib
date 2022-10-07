@@ -1840,6 +1840,24 @@ class JacklibInstance:
             return self.jlib.jack_set_property_change_callback(client, self._property_change_callback, arg)
 
         return -1
+    
+    def c_char_p_p_to_list(self, c_char_p_p, encoding=ENCODING, errors="ignore"):
+        i = 0
+        retList = []
+
+        if not c_char_p_p:
+            return retList
+
+        while True:
+            new_char_p = c_char_p_p[i]
+            if not new_char_p:
+                break
+
+            retList.append(new_char_p.decode(encoding=encoding, errors=errors))
+            i += 1
+
+        free(c_char_p_p)
+        return retList
 
 try:
     if platform == "darwin":
@@ -1855,3 +1873,6 @@ try:
     default = JacklibInstance(_libname)
 except OSError:
     raise ImportError("JACK is not available in this system")
+
+def free(ptr):
+    return default.free(ptr)
