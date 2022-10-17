@@ -1848,11 +1848,14 @@ class JacklibInstance:
         if not c_char_p_p:
             return retList
 
+        if isinstance (c_char_p_p, list):
+            return c_char_p_p
+
         while True:
             new_char_p = c_char_p_p[i]
             if not new_char_p:
                 break
-
+            
             retList.append(new_char_p.decode(encoding=encoding, errors=errors))
             i += 1
 
