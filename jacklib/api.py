@@ -41,6 +41,7 @@ from ctypes import (
     sizeof,
 )
 from sys import platform
+from pprint import *
 
 def _is_python_64bit():
     return sizeof(c_void_p) == 8
@@ -1220,11 +1221,11 @@ class JacklibInstance:
 
 
     def port_name(self, port):
-        return _d(jlib.jack_port_name(port))
+        return _d(self.jlib.jack_port_name(port))
 
 
     def port_short_name(self, port):
-        return _d(jlib.jack_port_short_name(port))
+        return _d(self.jlib.jack_port_short_name(port))
 
 
     def port_flags(self, port):
@@ -1232,7 +1233,7 @@ class JacklibInstance:
 
 
     def port_type(self, port):
-        return _d(jlib.jack_port_type(port))
+        return _d(self.jlib.jack_port_type(port))
 
 
     # JACK2 only:
@@ -1260,7 +1261,6 @@ class JacklibInstance:
             if port_name is None:
                 break
             yield _d(port_name)
-
 
     def port_get_all_connections(self, client, port):
         ports = self.jlib.jack_port_get_all_connections(client, port)
@@ -1563,7 +1563,7 @@ class JacklibInstance:
 
     def client_get_uuid(self, client):
         if self.jlib.jack_client_get_uuid:
-            return _d(jlib.jack_client_get_uuid(client))
+            return _d(self.jlib.jack_client_get_uuid(client))
 
         return None
 
@@ -1842,24 +1842,24 @@ class JacklibInstance:
         return -1
     
     def c_char_p_p_to_list(self, c_char_p_p, encoding=ENCODING, errors="ignore"):
+        """Convert C char** -> Python list of strings."""
         i = 0
         retList = []
 
+        pprint(c_char_p_p)
+
         if not c_char_p_p:
             return retList
-
-        if isinstance (c_char_p_p, list):
-            return c_char_p_p
 
         while True:
             new_char_p = c_char_p_p[i]
             if not new_char_p:
                 break
-            
+
             retList.append(new_char_p.decode(encoding=encoding, errors=errors))
             i += 1
 
-        free(c_char_p_p)
+        jacklib.free(c_char_p_p)
         return retList
 
 try:
